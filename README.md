@@ -29,15 +29,22 @@ Unlike simple demos, Crypto Lens focuses on **real cryptography**, **clean UX**,
 
 ## 🖼️ Screenshots
 
+### Sending a Message
 <p align="center">
   <img src="screenshots/send.png" width="420">
-  <img src="screenshots/envelope.png" width="420">
 </p>
 
+### Receiving & Opening
 <p align="center">
+  <img src="screenshots/envelope.png" width="420">
   <img src="screenshots/password.png" width="420">
+</p>
+
+### Message Unlocked
+<p align="center">
   <img src="screenshots/unlocked.png" width="420">
 </p>
+
 
 
 ```md
@@ -116,4 +123,5 @@ Crypto Lens was built to explore secure communication, UX-driven encryption, and
 Kashish
 
 GitHub: https://github.com/kashish-238
+
 
