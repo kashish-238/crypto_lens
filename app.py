@@ -15,6 +15,18 @@ st.set_page_config(
     layout="centered",
 )
 
+# -------------------- AUTO BASE URL (LOCAL + DEPLOYED) --------------------
+def get_base_url():
+    try:
+        headers = st.context.headers
+        proto = headers.get("x-forwarded-proto", "http")
+        host = headers.get("host")
+        if host:
+            return f"{proto}://{host}"
+    except Exception:
+        pass
+    return "http://localhost:8501"
+
 # -------------------- ROMANTIC THEME --------------------
 st.markdown(
     """
@@ -91,7 +103,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# -------------------- SOUND --------------------
+# -------------------- SOUND (USER INITIATED) --------------------
 def play_sound():
     components.html(
         """
@@ -115,31 +127,41 @@ if "payload" not in st.session_state and query_payload:
 st.title("💖 Crypto Lens")
 st.caption("A secret message, sealed just for you.")
 
-tab_encrypt, tab_open = st.tabs(["💌 Send", "📨 Open"])
+tab_send, tab_open = st.tabs(["💌 Send", "📨 Open"])
 
 # ====================================================
 # SEND TAB (SENDER)
 # ====================================================
-with tab_encrypt:
+with tab_send:
     st.subheader("💌 Send a Secret Message")
 
-    pwd = st.text_input("Secret password", type="password", key="send_pwd")
-    msg = st.text_area("Message", height=150, key="send_msg")
+    pwd = st.text_input("Secret password (share separately)", type="password", key="send_pwd")
+    msg = st.text_area(
+        "Message",
+        placeholder="Write something sweet, mysterious, or just for them...",
+        height=150,
+        key="send_msg",
+    )
 
     if st.button("Seal Message 💖", use_container_width=True):
-        payload = encrypt_message(msg, pwd)
-        packed = pack_payload_for_url(payload)
-        link = f"http://localhost:8501/?m={packed}"
+        if not pwd or not msg:
+            st.error("Please enter both a message and a password 💔")
+        else:
+            payload = encrypt_message(msg, pwd)
+            packed = pack_payload_for_url(payload)
 
-        st.success("Message sealed 💖")
-        st.markdown("### Share this link")
-        st.code(link)
+            base_url = get_base_url()
+            link = f"{base_url}/?m={packed}"
+
+            st.success("Your secret message is sealed 💖")
+            st.markdown("### 🔗 Share this link")
+            st.code(link)
 
 # ====================================================
 # OPEN TAB (RECEIVER)
 # ====================================================
 with tab_open:
-    st.subheader("💌 You've received a message")
+    st.subheader("💌 You've Received a Message")
 
     if query_payload and not st.session_state.envelope_opened:
         st.markdown(
@@ -171,3 +193,14 @@ with tab_open:
                 st.text_area("Your message", value=text, height=150)
             except Exception:
                 st.error("Wrong password 💔")
+
+# -------------------- FOOTER --------------------
+st.markdown(
+    """
+    <hr style="border:none;height:1px;background:#fbcfe8;margin-top:2rem;">
+    <center style="color:#9d174d;">
+        Made with 💖 for secret conversations
+    </center>
+    """,
+    unsafe_allow_html=True,
+)
