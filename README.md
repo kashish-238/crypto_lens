@@ -29,15 +29,12 @@ Unlike simple demos, Crypto Lens focuses on **real cryptography**, **clean UX**,
 
 ## 🖼️ Screenshots
 
-> *(Add your screenshots here)*
-
-```md
 ![Send Message Screen](screenshots/send.png)
 ![Envelope Reveal](screenshots/envelope.png)
 ![Enter the password](screenshots/password.png)
 ![Decrypted](screenshots/unlocked.png)
-Create a screenshots/ folder in your repo and drop images there.
 
+```md
 ## 🧠 How It Works
 The sender writes a message and sets a secret password
 
@@ -111,4 +108,5 @@ Crypto Lens was built to explore secure communication, UX-driven encryption, and
 
 ## 👤 Author
 Kashish
+
 GitHub: https://github.com/kashish-238
