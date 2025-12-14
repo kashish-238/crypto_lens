@@ -217,8 +217,9 @@ st.markdown(
     """
     <hr style="border:none;height:1px;background:#fbcfe8;margin-top:2rem;">
     <center style="color:#9d174d;">
-        Made with 💖 for secret conversations
+        Made by Kashish Dhanani with 💕
     </center>
     """,
     unsafe_allow_html=True,
 )
+
