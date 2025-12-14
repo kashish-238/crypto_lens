@@ -15,7 +15,7 @@ st.set_page_config(
     layout="centered",
 )
 
-# -------------------- AUTO BASE URL (LOCAL + DEPLOYED) --------------------
+# -------------------- AUTO BASE URL --------------------
 def get_base_url():
     try:
         headers = st.context.headers
@@ -27,7 +27,7 @@ def get_base_url():
         pass
     return "http://localhost:8501"
 
-# -------------------- ROMANTIC THEME --------------------
+# -------------------- ROMANTIC + MOBILE SAFE THEME --------------------
 st.markdown(
     """
     <style>
@@ -36,35 +36,56 @@ st.markdown(
     }
 
     h1, h2, h3 {
-        color: #9d174d;
+        color: #9d174d !important;
         font-family: 'Segoe UI', sans-serif;
     }
 
-    p, label {
-        font-family: 'Segoe UI', sans-serif;
-        color: #4a044e;
+    label {
+        color: #4a044e !important;
+        font-weight: 600;
+    }
+
+    input, textarea {
+        background-color: #ffffff !important;
+        color: #3b0a45 !important;
+        border-radius: 12px !important;
+        border: 1px solid #fbcfe8 !important;
+    }
+
+    input::placeholder, textarea::placeholder {
+        color: #9f7aea !important;
+        opacity: 0.7 !important;
+    }
+
+    input[type="password"] {
+        color: #3b0a45 !important;
     }
 
     div.stButton > button {
-        background-color: #ec4899;
-        color: white;
+        background-color: #ec4899 !important;
+        color: white !important;
         border-radius: 16px;
         padding: 0.7rem 1.2rem;
         font-weight: 600;
         border: none;
     }
 
-    pre {
+    pre, code {
         background-color: #fff5f7 !important;
+        color: #4a044e !important;
         border-radius: 14px;
         border: 1px solid #fbcfe8;
     }
 
-    /* Envelope */
+    button[data-baseweb="tab"] {
+        font-weight: 600;
+        color: #9d174d !important;
+    }
+
     .envelope {
         width: 280px;
         height: 180px;
-        background: #fff;
+        background: #ffffff;
         border-radius: 16px;
         margin: 40px auto 20px;
         position: relative;
@@ -103,7 +124,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# -------------------- SOUND (USER INITIATED) --------------------
+# -------------------- SOUND --------------------
 def play_sound():
     components.html(
         """
@@ -130,17 +151,16 @@ st.caption("A secret message, sealed just for you.")
 tab_send, tab_open = st.tabs(["💌 Send", "📨 Open"])
 
 # ====================================================
-# SEND TAB (SENDER)
+# SEND TAB
 # ====================================================
 with tab_send:
     st.subheader("💌 Send a Secret Message")
 
-    pwd = st.text_input("Secret password (share separately)", type="password", key="send_pwd")
+    pwd = st.text_input("Secret password (share separately)", type="password")
     msg = st.text_area(
         "Message",
         placeholder="Write something sweet, mysterious, or just for them...",
         height=150,
-        key="send_msg",
     )
 
     if st.button("Seal Message 💖", use_container_width=True):
@@ -149,16 +169,14 @@ with tab_send:
         else:
             payload = encrypt_message(msg, pwd)
             packed = pack_payload_for_url(payload)
-
-            base_url = get_base_url()
-            link = f"{base_url}/?m={packed}"
+            link = f"{get_base_url()}/?m={packed}"
 
             st.success("Your secret message is sealed 💖")
             st.markdown("### 🔗 Share this link")
             st.code(link)
 
 # ====================================================
-# OPEN TAB (RECEIVER)
+# OPEN TAB
 # ====================================================
 with tab_open:
     st.subheader("💌 You've Received a Message")
@@ -176,7 +194,7 @@ with tab_open:
             unsafe_allow_html=True,
         )
 
-        if st.button("Open Envelope 💖", key="open_env", use_container_width=True):
+        if st.button("Open Envelope 💖", use_container_width=True):
             st.session_state.envelope_opened = True
             play_sound()
             st.rerun()
@@ -184,7 +202,7 @@ with tab_open:
         st.stop()
 
     if st.session_state.envelope_opened:
-        pwd = st.text_input("Enter the secret password", type="password", key="open_pwd")
+        pwd = st.text_input("Enter the secret password", type="password")
 
         if st.button("Unlock Message 💕", use_container_width=True):
             try:
